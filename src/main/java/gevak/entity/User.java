@@ -1,43 +1,101 @@
 package gevak.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Collection;
 
 @Entity
-public class User {
+public class User implements UserDetails{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
+    private String username;
+    private String email;
+    private String phoneNumber;
+    private String password;
+
     private String surName;
     private String name;
+
     private int p1;
     private int p2;
     private int p3;
     private int atestat;
     private String avatar;
 
+    @Enumerated(EnumType.STRING)
+    private Authority authority = Authority.ROLE_USER;
+
+    private boolean accountNonExpired = true;
+    private boolean accountNonLocked = true;
+    private boolean credentialsNonExpired = true;
+    private boolean enabled = true;
+
+
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        ArrayList<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority(authority.name().toString()));
+        return authorities;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return username;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return accountNonExpired;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return accountNonLocked;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return credentialsNonExpired;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
+    }
+
     public User() {
     }
 
-    public User(String name, String surName, int p1, int p2, int p3, int atestat) {
+
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public User(String name, String surName) {
-        this.name = name;
-        this.surName = surName;
+    public String getEmail() {
+        return email;
     }
 
-    public User(String name, String surName, int p1, int p2, int p3, int atestat, String avatar) {
-        this.name = name;
-        this.surName = surName;
-        this.p1 = p1;
-        this.p2 = p2;
-        this.p3 = p3;
-        this.atestat = atestat;
-        this.avatar = avatar;
+    public void setEmail(String email) {
+        this.email = email;
     }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
 
     public int getId() {
         return id;
@@ -99,17 +157,43 @@ public class User {
 
     public void setAvatar(String avatar) { this.avatar = avatar; }
 
+    public Authority getAuthority() {return authority;}
+
+    public void setAuthority(Authority authority) {
+        this.authority = authority;
+    }
+
+    public String getPhoneNumber() {return phoneNumber;}
+
+    public void setPhoneNumber(String phoneNumber) {this.phoneNumber = phoneNumber;}
+
+    public void setAccountNonExpired(boolean accountNonExpired) {
+        this.accountNonExpired = accountNonExpired;
+    }
+
+    public void setAccountNonLocked(boolean accountNonLocked) {
+        this.accountNonLocked = accountNonLocked;
+    }
+
+    public void setCredentialsNonExpired(boolean credentialsNonExpired) {this.credentialsNonExpired = credentialsNonExpired;}
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
     @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
                 ", surName='" + surName + '\'' +
                 ", name='" + name + '\'' +
                 ", p1=" + p1 +
                 ", p2=" + p2 +
                 ", p3=" + p3 +
                 ", atestat=" + atestat +
-                ", avatar='" + avatar + '\'' +
                 '}';
     }
 }

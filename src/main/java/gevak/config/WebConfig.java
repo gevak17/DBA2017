@@ -3,6 +3,8 @@ package gevak.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -11,11 +13,27 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import java.io.File;
+import java.util.Properties;
 
 @Configuration
 @EnableWebMvc
 @ComponentScan("gevak")
 public class WebConfig extends WebMvcConfigurerAdapter {
+
+    @Bean
+    public JavaMailSender javaMailSender(){
+        JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
+        javaMailSender.setHost("smtp.gmail.com");
+        javaMailSender.setPort(587);
+        javaMailSender.setUsername("gevakproject@gmail.com");
+        javaMailSender.setPassword("1123598764321go");
+        Properties properties = javaMailSender.getJavaMailProperties();
+        properties.put("mail.transport.protocol", "smtp");
+        properties.put("mail.smtp.auth", "true");
+        properties.put("mail.smtp.starttls.enable", "true");
+        properties.put("mail.debag", "true");
+        return javaMailSender;
+    }
 
     @Bean
     public MultipartResolver multipartResolver(){
@@ -32,8 +50,8 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-
         registry.addResourceHandler("/image/**").addResourceLocations("/static/images/");
+        registry.addResourceHandler("/css/**").addResourceLocations("/static/styles/");
         registry.addResourceHandler("/avatar/**").addResourceLocations("file:" + System.getProperty("user.home") + File.separator + "images" + File.separator);
     }
 }

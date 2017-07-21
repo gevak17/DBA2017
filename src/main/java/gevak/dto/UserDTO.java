@@ -11,12 +11,16 @@ public class UserDTO {
     private int userP3;
     private int userAtestat;
     private String userAvatar;
+    private String userEmail;
+    private String userPhoneNumber;
 
 
     public UserDTO() {
     }
 
-    public UserDTO(int userId, String userSurname, String userName, int userP1, int userP2, int userP3, int userAtestat, String userAvatar) {
+
+    public UserDTO(int userId, String userSurname, String userName, int userP1, int userP2, int userP3,
+                   int userAtestat, String userAvatar, String userEmail, String userPhoneNumber) {
         this.userId = userId;
         this.userSurname = userSurname;
         this.userName = userName;
@@ -25,6 +29,8 @@ public class UserDTO {
         this.userP3 = userP3;
         this.userAtestat = userAtestat;
         this.userAvatar = userAvatar;
+        this.userEmail = userEmail;
+        this.userPhoneNumber = userPhoneNumber;
     }
 
     public int getUserId() {
@@ -91,6 +97,14 @@ public class UserDTO {
         this.userAvatar = userAvatar;
     }
 
+    public String getUserEmail() {return userEmail;}
+
+    public void setUserEmail(String userEmail) {this.userEmail = userEmail;}
+
+    public String getUserPhoneNumber() {return userPhoneNumber;}
+
+    public void setUserPhoneNumber(String userPhoneNumber) {this.userPhoneNumber = userPhoneNumber;}
+
     @Override
     public String toString() {
         return "UserDTO{" +
@@ -101,6 +115,9 @@ public class UserDTO {
                 ", userP2=" + userP2 +
                 ", userP3=" + userP3 +
                 ", userAtestat=" + userAtestat +
+                ", userAvatar='" + userAvatar + '\'' +
+                ", userEmail='" + userEmail + '\'' +
+                ", userPhoneNumber='" + userPhoneNumber + '\'' +
                 '}';
     }
 }

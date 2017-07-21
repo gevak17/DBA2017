@@ -48,7 +48,7 @@
 
 <br>
 
-<a href="/" style="text-decoration: none; color: white; border: 3px black solid; background-color: black"> <strong> Back </strong> </a>
+<a href="/" style="text-decoration: none; color: white; border: 3px black solid; background-color: black"> <strong> Main Page </strong> </a>
 
 </body>
 </html>

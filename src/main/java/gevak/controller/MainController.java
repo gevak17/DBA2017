@@ -1,9 +1,10 @@
 package gevak.controller;
 
 import gevak.dto.UserDTO;
-import gevak.validator.UserValidator;
 import gevak.entity.User;
+import gevak.service.MailService;
 import gevak.service.UserService;
+import gevak.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,7 +12,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartResolver;
 
 import javax.validation.Valid;
 import java.io.File;
@@ -25,47 +25,35 @@ public class MainController {
     @Autowired
     UserService userService;
 
-    @RequestMapping("/")
+    @Autowired
+    MailService mailService;
+
+    @GetMapping("/")                                                                 //main page
     public String toMainPage(Model model) {
-        model.addAttribute("user", new User("", ""));
+        return "welcome";
+    }
+
+
+    @GetMapping("/login")                                                           //login page
+    public String signIn(Model model) {
+        return "login";
+    }
+
+
+    @GetMapping("/index")                                                           //index page, register data user's
+    public String toIndexPage(Model model) {
+        model.addAttribute("user", new User());
         return "index";
     }
 
-    @RequestMapping(value = "addNewUser", method = RequestMethod.POST)
-    public String addNewUser(@ModelAttribute("user") @Valid User user, BindingResult result,
-                             @RequestParam("ava")MultipartFile multipartFile) {
-
-        if (result.hasErrors()) {
-            return "index";
-        }
-
-        String realPath = System.getProperty("user.home") + File.separator + "images" + File.separator;
-        System.out.println(realPath);
-        try {
-            multipartFile.transferTo(new File(realPath+multipartFile.getOriginalFilename()));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        user.setAvatar(File.separator+"avatar"+File.separator+multipartFile.getOriginalFilename());
-
-        userService.save(user);
-
-        return "redirect:/";
-
-    }
-
-
-
-
-
-    @GetMapping("/list")
+    @GetMapping("/list")                                                            // list page
     public String toListPage(Model model) {
         model.addAttribute("list", userService.findAll());
 
         List<User> users = userService.findAll();
         List<UserDTO> dtos = new ArrayList<>();
 
-        for (User user: users) {
+        for (User user : users) {
             UserDTO dto = new UserDTO();
 
             dto.setUserId(user.getId());
@@ -76,12 +64,48 @@ public class MainController {
             dto.setUserP3(user.getP3());
             dto.setUserAtestat(user.getAtestat());
             dto.setUserAvatar(user.getAvatar());
+            dto.setUserEmail(user.getEmail());
+            dto.setUserPhoneNumber(user.getPhoneNumber());
 
             dtos.add(dto);
         }
+        User user = new User();
         model.addAttribute("dtos", dtos);
         return "list";
     }
+
+    @GetMapping("/deleteAll")
+    public String delAll(){
+        userService.deleteAll();
+        return "list";
+    }
+
+    //SAVE USER DATA
+    //can be annotation @RequestMapping(value = "addNewUser", method = RequestMethod.POST)
+    @PostMapping("/addNewUser")
+    public String addNewUser(@ModelAttribute("user") @Valid User user, BindingResult result,
+                             @RequestParam("ava") MultipartFile multipartFile) {
+
+        if (result.hasErrors()) {
+            return "index";
+        }       //validator
+
+        String realPath = System.getProperty("user.home") + File.separator + "images" + File.separator;
+        try {
+            multipartFile.transferTo(new File(realPath + multipartFile.getOriginalFilename()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        user.setAvatar(File.separator + "avatar" + File.separator + multipartFile.getOriginalFilename());
+
+        userService.save(user);
+//        mailService.send(user);
+//        return "index";
+        return "redirect:/"; //return to page
+    }
+
+
 
 
     //Validator
@@ -92,16 +116,5 @@ public class MainController {
         binder.addValidators(userValidator);
     }
 
-
-
-
-
-
-
-//    @RequestMapping(value = "user", method = RequestMethod.POST)
-//    public  String addAbiturient(@ModelAttribute("emptyUser") User emptyUser){
-//        userService.save(emptyUser);
-//        return "list";
-//    }
 
 }
