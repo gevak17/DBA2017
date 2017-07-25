@@ -1,6 +1,13 @@
 body {
     background: aquamarine;
-    color: black;
+    font-family: Nimbus Mono;
+}
+div{
+    border-radius: 5%;
+    margin: auto;
 }
 
-
+.ul.li{
+    text-decoration: none;
+    color: aqua;
+}

@@ -105,7 +105,7 @@ public class MainController {
         user.setAvatar(File.separator + "avatar" + File.separator + multipartFile.getOriginalFilename());
 
         userService.save(user);
-//        mailService.send(user);
+        mailService.send(user);
 //        return "index";
         return "redirect:/"; //return to current page
     }
