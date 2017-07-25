@@ -3,9 +3,15 @@
     <title>List</title>
 
 </head>
-<body style="background-color: powderblue; margin: auto; width: 30% ">
-    <h1><i> List registered users: </i></h1>
+<body style="background-color: powderblue; margin: auto; width: 40% ">
+    <h1 style="text-align: center"><i> List registered users: </i></h1>
+    <p style="text-align: center"> List users will be visible only authorized users </p>
+    <t:authorize access="hasRole('ROLE_USER')">
+        <p style="text-align: center">This is hidden text</p>
+        <t:authorize access="hasRole('ROLE_ADMIN')">
 
+            <p>admin asdasdfasfsdgsfgdfgfd</p>
+        </t:authorize>
     <div style="background-color: cadetblue">
         <c:forEach items="${dtos}" var="dto">
             <table border="1" style="background-color: tomato">
@@ -29,9 +35,10 @@
                     <br>
                     <td><p>Average rating - ${(dto.userP1+dto.userP2+dto.userP3+dto.userAtestat)/4}</p></td>
 
+
                 </tr>
             </table>
-
+            <a href="/delUser-${dto.userId}">delete</a>
             <br>
 
         </c:forEach>
@@ -39,8 +46,9 @@
     </div>
 
 <br>
-
-<a href="/deleteAll" style="text-decoration: none; color: white; border: 3px black solid; background-color: black"> <strong> DELETE ALL </strong> </a>
-
+        <t:authorize access="hasRole('ROLE_ADMIN')">
+            <a href="/deleteAll" style="text-decoration: none; color: white; border: 3px black solid; background-color: black"> <strong> DELETE ALL </strong> </a>
+        </t:authorize>
+    </t:authorize>
 </body>
 </html>

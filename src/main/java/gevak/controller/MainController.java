@@ -29,15 +29,13 @@ public class MainController {
     MailService mailService;
 
     @GetMapping("/")                                                                 //main page
-    public String toMainPage(Model model) {
+    public String toMainPage() {
         return "welcome";
     }
 
 
     @GetMapping("/login")                                                           //login page
-    public String signIn(Model model) {
-        return "login";
-    }
+    public String signIn() {return "login";}
 
 
     @GetMapping("/index")                                                           //index page, register data user's
@@ -69,7 +67,7 @@ public class MainController {
 
             dtos.add(dto);
         }
-        User user = new User();
+//        User user = new User();
         model.addAttribute("dtos", dtos);
         return "list";
     }
@@ -77,6 +75,13 @@ public class MainController {
     @GetMapping("/deleteAll")
     public String delAll(){
         userService.deleteAll();
+        return "list";
+    }
+
+    @GetMapping("/delUser-{id}")
+    public String delUser(@PathVariable int id,
+                          Model model) {
+        model.addAttribute("Delete", userService.findOne(id));
         return "list";
     }
 
@@ -102,7 +107,7 @@ public class MainController {
         userService.save(user);
 //        mailService.send(user);
 //        return "index";
-        return "redirect:/"; //return to page
+        return "redirect:/"; //return to current page
     }
 
 
